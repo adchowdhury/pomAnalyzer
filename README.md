@@ -7,7 +7,7 @@ The `App.java` class is the entry point of the POMAnalyzer application. It perfo
 
 1. **Argument Parsing**:
     - The application expects at least one argument: the path to the `pom.xml` file.
-    - Optionally, it can take two additional boolean arguments: `verbose` and `openInBrowser`.
+    - Optionally, it can take additional boolean arguments: `verbose`.
 
 2. **Main Method**:
     - The `main` method initializes the application by parsing the provided arguments.
@@ -23,5 +23,5 @@ To run the application, use the following command:
 ```sh
 java -jar pomAnalyzer.jar <pathOfPomFile> [verbose] [output type]
 
-output type: JSON, HTML, EXCEL  
+output type: JSON, HTML, EXCEL  (currently supporting only HTML)
 ```
