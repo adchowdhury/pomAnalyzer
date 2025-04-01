@@ -24,6 +24,11 @@
 				transition: background-color 0.3s ease;
 			}
 			
+			.highlight-table1 tr:hover td{
+				background-color: lightyellow;/* Highlight color */
+				transition: background-color 0.3s ease;
+			}
+			
 			.tabs {
 				display: flex;
 				cursor: pointer;
@@ -173,7 +178,7 @@
 				<td>${totalLibraries}</td>
 			</tr>
 			<tr>
-				<th align= "left">Vulnerable Libraries</th>
+				<th align= "left">Vulnerable Libraries (with direct vulnerabilities)</th>
 				<td class="vulnarable">${affectedLIbraries}</td>
 			</tr>
 			<tr>
@@ -213,11 +218,22 @@
 	  </div>
 
 	  <div id="uv" class="tab-content">
-	  	<ol class="uv-block" type="1">
-		<#list allVulnerabilities as v>
-		<li class="uv-div"><a target='_blank' href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=${v}'>${v}</a></li>
-		</#list>
-		</ol>
+	  <table width="100%" cellpadding="2" style='' class="highlight-table1 comn-table">
+         <tr style=''>
+            <th style=''>Vulnerability ID</th>
+            <th style=''>Title</th>
+            <th style=''>CVSS Score</th>
+            <th style=''>Description</th>
+         </tr>
+         <#list allVulnerabilities as v>
+         <tr style=''>
+         	<td><a target='_blank' href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=${v.cveID}'>${v.cveID}</a></td>
+            <td>${v.title}</td>
+            <td>${v.cvssScore}</td>
+            <td>${v.description}</td>
+         </tr>
+         </#list>
+	  </table>
 	  </div>
 	  
    </body>

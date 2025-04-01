@@ -5,38 +5,44 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateExceptionHandler;
-
-import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import app.anisan.pomAnalyzer.App;
 import app.anisan.pomAnalyzer.POMDependencyObject;
-import app.anisan.pomAnalyzer.VulnerabilityUpdater;
+import app.anisan.pomAnalyzer.Vulnerability;
 import app.anisan.pomAnalyzer.log.Logger;
 import app.anisan.pomAnalyzer.output.params.WriterParams;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
 
 public class HTMLWriter implements Writer {
 
     public void write(List<POMDependencyObject> dependencies, WriterParams params) {
         try {
-        	Set<String> allVulnerabilities = new LinkedHashSet<>();
+        	Set<Vulnerability> allVulnerabilities = new LinkedHashSet<>();
         	int affectedLIbraries = 0;
         	 for (POMDependencyObject pomDependency : dependencies) {
                 
-                 if (pomDependency.getVulnerabilities() != null && !pomDependency.getVulnerabilities().isEmpty()) {
-                     allVulnerabilities.addAll(pomDependency.getVulnerabilities());
+                 if (pomDependency.getVulnerabilitiesObject() != null && !pomDependency.getVulnerabilitiesObject().isEmpty()) {
+                     allVulnerabilities.addAll(pomDependency.getVulnerabilitiesObject());
                      affectedLIbraries++;
                  }
              }
+        	 
+        	 List<Vulnerability> sortedList = new ArrayList<>(allVulnerabilities);
+        	 
+        	 sortedList.sort(Comparator.comparing(Vulnerability::getCvssScore));
+        	 
         	Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
         	
         	cfg.setClassLoaderForTemplateLoading(
@@ -55,7 +61,7 @@ public class HTMLWriter implements Writer {
             data.put("uniqueVulnerabilityCount", allVulnerabilities.size());
             data.put("affectedLIbraries", affectedLIbraries);
             data.put("dependencies", dependencies);
-            data.put("allVulnerabilities", allVulnerabilities);
+            data.put("allVulnerabilities", sortedList);
             
             StringWriter out = new StringWriter();
             template.process(data, out);
@@ -68,7 +74,7 @@ public class HTMLWriter implements Writer {
             Logger.log("Opening into the default browser...:" + outputFile.getAbsolutePath(), App.verbose);
             Desktop.getDesktop().browse(outputFile.toURI());
         } catch (Throwable e) {
-            Logger.error("Error while writing HTML", e);
+            Logger.error("Error while writing HTML", e, App.verbose);
         }
     }
 

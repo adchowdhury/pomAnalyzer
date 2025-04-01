@@ -13,14 +13,15 @@ import app.anisan.pomAnalyzer.log.Logger;
 public class PomValidator {
 	
 	public static ProjectDetails getProjectDetails(String strPathToPOM) throws Throwable {
-		ProjectDetails pd = new ProjectDetails();
 		Document doc = Jsoup.parse(new File(strPathToPOM), "UTF-8", "", org.jsoup.parser.Parser.xmlParser());
 		
-		pd.setGroupId(getElementText(doc, "project > groupId"));
-		pd.setArtifactId(getElementText(doc, "project > artifactId"));
-		pd.setVersion(getElementText(doc, "project > version"));
-		pd.setName(getElementText(doc, "project > name"));
-		pd.setDescription(getElementText(doc, "project > description"));
+		ProjectDetails pd = new ProjectDetails.ProjectDetailsBuilder()
+				.groupId(getElementText(doc, "project > groupId"))
+				.artifactId(getElementText(doc, "project > artifactId"))
+				.version(getElementText(doc, "project > version"))
+				.name(getElementText(doc, "project > name"))
+				.description(getElementText(doc, "project > description"))
+				.build();
 		
 		return pd;
 	}
@@ -65,18 +66,18 @@ public class PomValidator {
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-            	Logger.error("Maven validate exited with code: " + exitCode);
+            	Logger.error("Maven validate exited with code: " + exitCode, App.verbose);
             }
 
             if (exitCode == 0 && isValid) {
-                Logger.log("✅ pom.xml is valid.");
+                Logger.log("✅ pom.xml is valid.", App.verbose);
             } else {
-                Logger.error("❌ pom.xml is invalid.");
+                Logger.error("❌ pom.xml is invalid.", App.verbose);
                 isValid = false;
             }
 
         } catch (Exception e) {
-            Logger.error("Error validating pom.xml: " + e.getMessage(), e);
+            Logger.error("Error validating pom.xml: " + e.getMessage(), e, App.verbose);
             isValid = false;
         }
         return isValid;

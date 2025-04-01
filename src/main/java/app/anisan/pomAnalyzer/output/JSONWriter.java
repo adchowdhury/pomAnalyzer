@@ -27,9 +27,9 @@ public class JSONWriter implements Writer {
             //Object json = objectMapper.readValue(jsonContent, Object.class);
             String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectMapper.writeValueAsString(dependencies));
             fileWriter.write(prettyJson);
-            Logger.log("JSON file created successfully at: " + filePath);
+            Logger.log("JSON file created successfully at: " + filePath, App.verbose);
         } catch (IOException e) {
-            Logger.error("Error while writing JSON", e);
+            Logger.error("Error while writing JSON", e, App.verbose);
         }
     }
 }

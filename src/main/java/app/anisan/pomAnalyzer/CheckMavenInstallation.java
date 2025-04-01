@@ -14,7 +14,7 @@ public class CheckMavenInstallation {
             String mavenPath = getMavenPath();
 
             if (mavenPath == null) {
-                Logger.error("❌ Maven is not installed or not available in PATH.");
+                Logger.error("❌ Maven is not installed or not available in PATH.", App.verbose);
                 return false;
             }
 
@@ -36,15 +36,15 @@ public class CheckMavenInstallation {
             int exitCode = process.waitFor();
 
             if (foundMaven && exitCode == 0) {
-                Logger.log("✅ Maven is installed!");
+                Logger.log("✅ Maven is installed!", App.verbose);
                 return true;
             } else {
-                Logger.error("❌ Maven is not installed or not available in PATH.");
+                Logger.error("❌ Maven is not installed or not available in PATH.", App.verbose);
                 return false;
             }
 
         } catch (Exception e) {
-            Logger.error("❌ Maven is not installed or not in system PATH.", e);
+            Logger.error("❌ Maven is not installed or not in system PATH.", e, App.verbose);
             return false;
         }
     }
@@ -72,16 +72,16 @@ public class CheckMavenInstallation {
                 }
                 return line;
             } else {
-                Logger.error("Maven executable not found in PATH.");
+                Logger.error("Maven executable not found in PATH.", App.verbose);
             }
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                Logger.error("Command exited with code: " + exitCode);
+                Logger.error("Command exited with code: " + exitCode, App.verbose);
             }
 
         } catch (IOException | InterruptedException e) {
-            Logger.error("Error while searching for Maven executable: " + e.getMessage(), e);
+            Logger.error("Error while searching for Maven executable: " + e.getMessage(), e, App.verbose);
         }
         return null;
     }

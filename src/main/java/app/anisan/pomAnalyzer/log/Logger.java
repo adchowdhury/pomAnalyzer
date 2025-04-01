@@ -6,7 +6,7 @@ package app.anisan.pomAnalyzer.log;
  */
 public class Logger {
 
-    public static void log(String message) {
+    private static void log(String message) {
         System.out.println(message);
     }
 
@@ -16,12 +16,8 @@ public class Logger {
         }
     }
 
-    public static void error(String message) {
+    private static void error(String message) {
         System.err.println(message);
-    }
-
-    public static void error(int message) {
-        error(message + "");
     }
 
     public static void error(String message, boolean verbose) {
@@ -30,7 +26,7 @@ public class Logger {
         }
     }
 
-    public static void error(String message, Throwable e) {
+    private static void error(String message, Throwable e) {
         error(message);
         e.printStackTrace();
     }

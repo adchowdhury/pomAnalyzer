@@ -19,6 +19,9 @@ public class POMDependencyObject {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> vulnerabilities = new ArrayList<>();
+    
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<Vulnerability> vulnerabilitiesObject = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -33,5 +36,4 @@ public class POMDependencyObject {
         sb.append("}");
         return sb.toString();
     }
-
 }
