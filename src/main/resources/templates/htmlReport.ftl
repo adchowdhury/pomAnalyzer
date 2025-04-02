@@ -209,7 +209,7 @@
             <td><a href='https://mvnrepository.com/artifact/${d.groupID}/${d.artifactID}/${d.latestVersion}' target='_blank'>${d.latestVersion}</a></td>
             <td>
             	<#list d.vulnerabilities as v>
-            	<a target='_blank' href='https://nvd.nist.gov/vuln/detail/${v}'>${v}</a><br>
+            	<a target='_blank' href='https://ossindex.sonatype.org/vulnerability/${v}'>${v}</a><br>
             	</#list>
             </td>
          </tr>
@@ -227,7 +227,7 @@
          </tr>
          <#list allVulnerabilities as v>
          <tr style=''>
-         	<td><a target='_blank' href='https://nvd.nist.gov/vuln/detail/${v.cveID}'>${v.cveID}</a></td>
+         	<td><a target='_blank' href='https://ossindex.sonatype.org/vulnerability/${v.cveID}'>${v.cveID}</a></td>
             <td>${v.title}</td>
             <td>${v.cvssScore}</td>
             <td>${v.description}</td>

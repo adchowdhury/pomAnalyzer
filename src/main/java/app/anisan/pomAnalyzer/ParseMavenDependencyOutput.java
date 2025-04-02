@@ -34,26 +34,38 @@ public final class ParseMavenDependencyOutput {
     public void parse(String pomFilePath, WriterFactory.WriterType writerType) throws Throwable {
         //https://codebeautify.org/json-to-html-converter
         if (!CheckMavenInstallation.checkIfMavenIsInstalled()) {
-            Logger.error("Maven is not installed.", App.verbose);
+            Logger.error("Maven is not installed.", true);
             throw new RuntimeException("Maven is not installed.");
         }
-
+        if(App.verbose == false) {
+        	System.out.print("\rValidating POM file");
+        }
         if (!PomValidator.validatePom(new File(pomFilePath).getParent())) {
-            Logger.error("Invalid POM : " + pomFilePath, App.verbose);
+            Logger.error("Invalid POM : " + pomFilePath, true);
             throw new RuntimeException("Invalid POM : " + pomFilePath);
         }
-
+        if(App.verbose == false) {
+        	System.out.print("\rGenerating Dependency List");
+        }
         String mavenDependencyList = DependencyFinder.getDependencyList(pomFilePath);
 
         Logger.log(mavenDependencyList, App.verbose);
         //Set<Vulnerability> allVulnerabilities = new LinkedHashSet<>();
+        if(App.verbose == false) {
+        	System.out.print("\rParsing Dependency List");
+        }
         List<POMDependencyObject> dependencies = ParseMavenDependencyOutput.getPOMDependencies(mavenDependencyList);
         dependencies.sort(Comparator.comparing(POMDependencyObject::getGroupID).thenComparing(POMDependencyObject::getArtifactID));
-        
         ObjectMapper objectMapper = new ObjectMapper();
-
+        int stepCounter = 0;
+        double precentageCompletion = 0.0;
+        if(App.verbose == false) {
+        	System.out.print("\rStarting scanning, total : " + dependencies.size() + " dependencies");
+        }
         for (POMDependencyObject pomDependency : dependencies) {
-
+        	if(App.verbose == false) {
+        		System.out.print("\r[" + String.format(" %.2f%% ", ((double) stepCounter / (dependencies.size() * 2) * 100)) +"] Scanning vulnerabilities > " + pomDependency.getGroupID() + "." + pomDependency.getArtifactID()+ " ".repeat(100));
+        	}
         	try {
         		VulnerabilityUpdater.updateVulnerabilities(pomDependency);
                 
@@ -66,7 +78,10 @@ public final class ParseMavenDependencyOutput {
 			} catch (Throwable a_th) {
 				Logger.error("VulnerabilityUpdater Error while getting " + pomDependency, a_th, App.verbose);
 			}
-        	
+        	stepCounter++;
+        	if(App.verbose == false) {
+        		System.out.print("\r[" + String.format(" %.2f%% ", ((double) stepCounter / (dependencies.size() * 2) * 100)) +"] Checking Latest Version > " + pomDependency.getGroupID() + "." + pomDependency.getArtifactID()+ " ".repeat(100));
+        	}
         	try {
             	VersionUpdater.updateLatestVersion(pomDependency);
 			} catch (Throwable a_th) {
@@ -74,14 +89,21 @@ public final class ParseMavenDependencyOutput {
 			}
         	
         	
-            
+        	stepCounter++;
             //added delay so the source server don't block you out.
             Thread.sleep(2000);
         }
-        
+        if(App.verbose == false) {
+        	System.out.print("\r Scanning completed."+ " ".repeat(100));
+        }
         App.projectDetails = PomValidator.getProjectDetails(pomFilePath);
-
+        if(App.verbose == false) {
+        	System.out.print("\r Preparing report file."+ " ".repeat(100));
+        }
         writeOutput(pomFilePath, objectMapper, dependencies, writerType);
+        if(App.verbose == false) {
+        	System.out.println("\r Report generated."+ " ".repeat(100));
+        }
     }
 
     private void writeOutput(String pomFilePath, ObjectMapper objectMapper, List<POMDependencyObject> dependencies,
