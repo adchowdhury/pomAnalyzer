@@ -151,7 +151,7 @@
 			}
 			.footerA img:hover {
 				text-decoration: underline;
-				background-color: rgba(240, 227, 36, 0.76);/* Light blue highlight */
+				background-color: rgba(173, 216, 230, 0.3);/* Light blue highlight */
 			}
 		</style>
 
