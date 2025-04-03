@@ -21,7 +21,5 @@ The `App.java` class is the entry point of the POMAnalyzer application. It perfo
 To run the application, use the following command:
 
 ```sh
-java -jar pomAnalyzer.jar <pathOfPomFile> [verbose] [output type]
-
-output type: JSON, HTML, EXCEL  (currently supporting only HTML)
+java -jar pomAnalyzer.jar <pathOfPomFile> [verbose]
 ```
