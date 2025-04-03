@@ -10,7 +10,7 @@ public class App {
 	
     public static void main(String[] args) {
         if (args.length < 1) {
-            Logger.log("Usage: java -jar pomAnalyzer.jar <pathOfPomFile> [verbose] [writerType]", true);
+            Logger.log("Usage: java -jar pomAnalyzer.jar <pathOfPomFile> [verbose]", true);
             System.exit(1);
         }
 
@@ -18,8 +18,8 @@ public class App {
         verbose = args.length > 1 && Boolean.parseBoolean(args[1]);
         WriterFactory.WriterType writerType = args.length > 2 ? WriterFactory.WriterType.valueOf(args[3]) : WriterFactory.WriterType.HTML;
         Logger.log("Parsing POM file: " + pathOfPomFile, true);
-        Logger.log("Verbose: " + verbose, true);
-        Logger.log("Writer type: " + writerType, true);
+//        Logger.log("Verbose: " + verbose, true);
+//        Logger.log("Writer type: " + writerType, true);
 
         try {
             new ParseMavenDependencyOutput().parse(pathOfPomFile, WriterFactory.WriterType.HTML);
