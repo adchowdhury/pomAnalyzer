@@ -23,3 +23,8 @@ To run the application, use the following command:
 ```sh
 java -jar pomAnalyzer.jar <pathOfPomFile> [verbose]
 ```
+
+<br />
+
+### You can download the latest release from below link
+https://github.com/adchowdhury/pomAnalyzer/releases/latest
